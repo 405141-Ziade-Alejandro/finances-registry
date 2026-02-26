@@ -60,4 +60,18 @@ public class TransactionEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TO_ASSET_ID")
     private AssetEntitiy toAsset;
+    /**
+     * this is made to express income from external sources like salary,
+     * it is not for internal trasnfers from accounts or to assets
+     * this is nullable
+     */
+    @Column(name = "EXTERNAL_FROM")
+    private String externalFrom;
+    /**
+     * similar to the other one, this is for external trasnfers mainly expenses, like food, cookies or taxes
+     * it is not for internal transfers
+     * this is nullable
+     */
+    @Column(name = "EXTERNAL_TO")
+    private String externalTo;
 }
