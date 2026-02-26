@@ -7,7 +7,7 @@ import lombok.*;
 
 /**
  * this entity represents the accounts i have, ex: the bank
- * it holds information on the balance i have on them
+ * it holds information on the balanceInCents i have on them
  */
 @Entity
 @Table(name = AccountEntity.TABLE_NAME)
@@ -43,5 +43,5 @@ public class AccountEntity extends BaseEntity {
      * this is the actual amount i have on the account
      */
     @Column(nullable = false)
-    private long balance;
+    private long balanceInCents;
 }

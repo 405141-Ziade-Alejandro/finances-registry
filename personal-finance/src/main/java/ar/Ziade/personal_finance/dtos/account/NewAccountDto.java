@@ -1,4 +1,8 @@
 package ar.Ziade.personal_finance.dtos.account;
 
-public class NewAccountDto {
+import ar.Ziade.personal_finance.entities.CurrencyType;
+import ar.Ziade.personal_finance.entities.account.AccountType;
+import jakarta.validation.constraints.PositiveOrZero;
+
+public record NewAccountDto(String name, CurrencyType currency, AccountType accountType, @PositiveOrZero long balanceInCents) {
 }
