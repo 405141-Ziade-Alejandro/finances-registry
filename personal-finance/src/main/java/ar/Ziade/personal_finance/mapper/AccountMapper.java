@@ -6,6 +6,8 @@ import ar.Ziade.personal_finance.dtos.account.NewAccountDto;
 import ar.Ziade.personal_finance.entities.account.AccountEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+
 /**
  * Converts a {@link NewAccountDto} into an {@link AccountEntity}.
  *
@@ -14,7 +16,7 @@ import org.mapstruct.Mapping;
  * The entity field is named "currencyType"
  * Since the names differ, we must explicitly define the mapping.
  *
- * @param newAccountDto the incoming request object containing
+ * @param "NewAccountDto" the incoming request object containing
  *                      account creation data
  * @return a new AccountEntity instance ready to be persisted
  *
@@ -25,6 +27,8 @@ import org.mapstruct.Mapping;
  */
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
+
+
     @Mapping(target = "currencyType", // field name in AccountEntity
             source = "currency") //field name in AccountDto
     AccountEntity toEntity(NewAccountDto newAccountDto);
@@ -42,4 +46,8 @@ public interface AccountMapper {
      */
     @Mapping(target = "currency", source = "currencyType")
     AccountDto toDto(AccountEntity accountEntity);
+
+    @Mapping(target = "id", ignore = true) //to never overwrrite the id
+    @Mapping(target = "currencyType", source = "currency")
+    void updateAccount(NewAccountDto newAccountDto, @MappingTarget AccountEntity accountEntity);
 }
