@@ -3,6 +3,7 @@ package ar.Ziade.personal_finance.services.impl;
 import ar.Ziade.personal_finance.dtos.account.AccountDto;
 import ar.Ziade.personal_finance.dtos.account.NewAccountDto;
 import ar.Ziade.personal_finance.entities.account.AccountEntity;
+import ar.Ziade.personal_finance.mapper.AccountMapper;
 import ar.Ziade.personal_finance.repositories.AccountRepository;
 import ar.Ziade.personal_finance.services.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +19,14 @@ import java.util.Optional;
 @Slf4j
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
     @Override
     public List<AccountDto> getAllAccounts() {
         List<AccountEntity> accountEntities = accountRepository.findAll();
         List<AccountDto> accountDtos = new ArrayList<>();
         for (AccountEntity accountEntity : accountEntities) {
-            AccountDto accountDto = new AccountDto(accountEntity.getId(),
-                    accountEntity.getName(),
-                    accountEntity.getCurrencyType(),
-                    accountEntity.getAccountType(),
-                    accountEntity.getBalanceInCents());
+            AccountDto accountDto = accountMapper.toDto(accountEntity);
             accountDtos.add(accountDto);
         }
 
@@ -56,13 +54,11 @@ public class AccountServiceImpl implements AccountService {
         if (optionalAccountEntity.isPresent()) {
             throw new IllegalArgumentException("Account already exists");
         }
-        AccountEntity accountEntity = AccountEntity.builder()
-                .name(accountDto.name())
-                .currencyType(accountDto.currency())
-                .accountType(accountDto.accountType())
-                .balanceInCents(accountDto.balanceInCents())
-                .build();
+        AccountEntity accountEntity = accountMapper.toEntity(accountDto);
 
-        return null;
+        AccountEntity savedAccountEntity = accountRepository.save(accountEntity);
+
+
+        return accountMapper.toDto(savedAccountEntity);
     }
 }
