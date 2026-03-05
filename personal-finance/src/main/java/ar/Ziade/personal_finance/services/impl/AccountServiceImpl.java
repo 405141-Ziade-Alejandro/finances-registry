@@ -3,9 +3,11 @@ package ar.Ziade.personal_finance.services.impl;
 import ar.Ziade.personal_finance.dtos.account.AccountDto;
 import ar.Ziade.personal_finance.dtos.account.NewAccountDto;
 import ar.Ziade.personal_finance.entities.account.AccountEntity;
+import ar.Ziade.personal_finance.exceptions.AccountAlreadyExistException;
 import ar.Ziade.personal_finance.mapper.AccountMapper;
 import ar.Ziade.personal_finance.repositories.AccountRepository;
 import ar.Ziade.personal_finance.services.AccountService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * service class that help with the crud of accounts
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,6 +30,7 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -80,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto postAccount(NewAccountDto accountDto) {
         Optional<AccountEntity> optionalAccountEntity = accountRepository.findByName(accountDto.name());
         if (optionalAccountEntity.isPresent()) {
-            throw new IllegalArgumentException("Account already exists");
+            throw new AccountAlreadyExistException(accountDto.name());
         }
         AccountEntity accountEntity = accountMapper.toEntity(accountDto);
 
